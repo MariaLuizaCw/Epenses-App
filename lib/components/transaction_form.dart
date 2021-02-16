@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TransactionForm extends StatefulWidget {
-  final void Function(String, double, DateTime) onSubmit;
+  final void Function(String, double, DateTime, String) onSubmit;
   TransactionForm(this.onSubmit);
 
   @override
@@ -11,8 +11,8 @@ class TransactionForm extends StatefulWidget {
 
 class _TransactionFormState extends State<TransactionForm> {
   final _titleController = TextEditingController();
-
   final _valueController = TextEditingController();
+  String _categoryChoosen = "Undefined";
   DateTime _selectedDate = DateTime.now();
   _submitForm() {
     final title = _titleController.text;
@@ -20,9 +20,9 @@ class _TransactionFormState extends State<TransactionForm> {
     if (title.isEmpty || value <= 0 || _selectedDate == null ) {
       return;
     }
-    widget.onSubmit(title, value, _selectedDate);
+    widget.onSubmit(title, value, _selectedDate, _categoryChoosen);
   }
-
+  final _categories = ['Food', 'Home', 'Study/Work', 'Leisure', 'Bills', 'Clothes', 'Undefined'];
   _showDatePicker() {
     showDatePicker(
             context: context,
@@ -41,7 +41,11 @@ class _TransactionFormState extends State<TransactionForm> {
       
     });
   }
-
+   _dropDownItemSelected(itemSelected){
+      setState(() {
+        _categoryChoosen =  itemSelected;
+      });
+  }
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -49,6 +53,7 @@ class _TransactionFormState extends State<TransactionForm> {
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
               controller: _titleController,
@@ -60,6 +65,16 @@ class _TransactionFormState extends State<TransactionForm> {
               onSubmitted: (_) => _submitForm(),
               controller: _valueController,
               decoration: InputDecoration(labelText: 'Valor'),
+            ),
+            DropdownButton(
+                items: _categories.map((String cat){
+                  return DropdownMenuItem(
+                    value: cat,
+                    child: Text(cat),
+                  );
+                }).toList(),
+                onChanged: _dropDownItemSelected,
+                value: _categoryChoosen
             ),
             Container(
               height: 70,

@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:provider/provider.dart';
+
 import 'package:expenses/components/transaction_form.dart';
 import 'package:expenses/components/transaction_list.dart';
 import 'package:expenses/models/transaction.dart';
@@ -32,7 +32,7 @@ class ExpensesViewer extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'You still have ${limitLeft/limit * 100}% of yout limit available',
+                  'You still have ${limitLeft/limit * 100}% of your limit available',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.headline3,
             
@@ -69,12 +69,13 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  _addTransaction(String title, double value, DateTime date) {
+  _addTransaction(String title, double value, DateTime date, String category) {
     final newTransaction = Transaction(
       id: Random().nextDouble().toString(),
       title: title,
       value: value,
       date: date,
+      category: category,
     );
     setState(() {
       _transactions.add(newTransaction);
